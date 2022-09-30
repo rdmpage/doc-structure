@@ -8,7 +8,7 @@ require_once('spatial.php');
 require_once('common.php');
 
 //----------------------------------------------------------------------------------------
-function parse_djvu($filename)
+function parse_abbyy($filename)
 {
 	$obj = new stdclass;
 
@@ -18,6 +18,8 @@ function parse_djvu($filename)
 
 
 	$image_counter = 1;
+	
+	$page_count = 0;
 
 	$xml = file_get_contents($filename);
 				
@@ -47,6 +49,13 @@ function parse_djvu($filename)
 				$attributes[$attr->name] = $attr->value; 
 			}
 		}
+		
+		$source_id = basename($filename, ".xml");
+		$source_id = preg_replace('/_abbyy/', '', $source_id);
+		$source_id = str_replace(' ', '', $source_id);
+		$page->imageUrl = 'https://archive.org/download/' . $source_id . '/page/n' . $page_count . '.jpg';			
+		//print_r($attributes);
+		
 	
 		$page->width = $attributes['width'];
 		$page->height = $attributes['height'];	
@@ -343,6 +352,7 @@ function parse_djvu($filename)
 		}	
 	
 		$obj->pages[] = $page;
+		$page_count++;
 		
 		if (!$obj->text_bbox)
 		{
@@ -361,7 +371,9 @@ function parse_djvu($filename)
 
 $filename = 'blumea-0006-5196-59-006-009_abbyy.xml';
 
-$obj = parse_djvu($filename);
+$filename = 'Australian Crickets_abbyy.xml';
+
+$obj = parse_abbyy($filename);
 
 echo document_to_html($obj);
 

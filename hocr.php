@@ -110,7 +110,7 @@ function parse_hocr($filename)
 			if ($ocr_photo->hasAttributes()) 
 			{ 
 				$attributes = array();
-				$attrs = $line_tag->attributes; 
+				$attrs = $ocr_photo->attributes; 
 
 				foreach ($attrs as $i => $attr)
 				{
@@ -118,7 +118,7 @@ function parse_hocr($filename)
 				}
 			} 			
 			$image_obj = new stdclass;
-			$image_obj->bbox = $block->bbox;
+			$image_obj->bbox = extract_box($attributes['title']);
 			$page->images[] = $image_obj;
 		}
 	
@@ -259,14 +259,17 @@ $filename = 'biostor-273728_hocr.html';
 $filename = 'acta-entomologica-sinica-1685_hocr.html';
 $filename = 'konowia-9-0177-0190_hocr.html';
 $filename = 'animal-systematics-evolution-and-diversity-37-3-225-228_hocr.html';
+$filename = 'biostor-273843_hocr.html';
+
+$filename = 'Australian Crickets_hocr.html';
 
 $obj = parse_hocr($filename);
 
-//echo document_to_html($obj);
+echo document_to_html($obj);
 
 //echo document_to_text($obj);
 
-echo document_to_json($obj);
+//echo document_to_json($obj);
 
 
 
